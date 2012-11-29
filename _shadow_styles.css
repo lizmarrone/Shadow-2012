@@ -29,3 +29,4 @@ body {background: url("images/site-bg-grad.png")repeat-x bottom left #171b1e; co
 #footer #cslinks {width:340px; padding:0 20px;float:left;}
 #footer #sociallinks {width:240px; padding:0;float:left;}
 #footer #cslinks a, #footer #sociallinks a {padding:5px 20px 5px 0;width:90px; display:inline-block;}
+#footer #footsub input#subscribeLogin, #footer #footsub input#subscribeFullname {/*background:#bcbcbc; border-radius:5px 5px 5px 5px;color:#656565;border:1px solid #656565;*/padding:3px;margin-bottom:5px;}

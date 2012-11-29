@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201211282138",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201211291107",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.downlitebedding.com/",
 	"httpURL":"http://www.downlitebedding.com/"
@@ -41,7 +41,7 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <link rel="stylesheet" type="text/css" href="qs_styles.css" />
 <link rel="stylesheet" type="text/css" href="_shadow_styles.css" />
-<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="jquery-ui-1.9.2.custom.min.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
@@ -139,13 +139,11 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 		<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
 		<fieldset class='userInfo borderNone'>
 		<div>
-		<label for='subscribeLogin'>Email Address</label>
-		<input type='email'  maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
+		<input type='email'  maxlength='50' size='30' name='login' id='subscribeLogin' value='E-mail Address' />
 		</div>
 
 		<div>
-		<label for='subscribeFullname'>Full Name</label>
-		<input type='text'  maxlength='50' size='30' name='fullname' id='subscribeFullname' value='' />
+		<input type='text'  maxlength='50' size='30' name='fullname' id='subscribeFullname' value='Full Name' />
 		</div>
 		</fieldset>
 
