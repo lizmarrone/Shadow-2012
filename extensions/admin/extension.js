@@ -338,6 +338,22 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
+
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
+
+
+
+/* used for html editor. */
+app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/style/jHtmlArea.ColorPickerMenu.css','jHtmlArea_ColorPickerMenu']);
+app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/style/jHtmlArea.css','jHtmlArea']);
+//note - the editor.css file that comes with jhtmlarea is NOT needed. just sets the page bgcolor to black.
+
+// colorpicker isn't loaded until jhtmlarea is done to avoid a js error due to load order.
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea-0.7.5.min.js',function(){app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea.ColorPickerMenu-0.7.0.min.js'])}]);
+
+
+
+
 				return r;
 				},
 			onError : function(d)	{
@@ -434,7 +450,19 @@ else	{
 				document.location = 'logout.html'
 				}
 			},
-
+//in cases where the content needs to be reloaded after making an API call, but when a showUI directly won't do (because of sequencing, perhaps)
+//For example, after new files are added to a ticket (comatability mode), this is executed on a ping to update the page behind the modal.
+		showUI : {
+			onSuccess : function(tagObj)	{
+				if(tagObj && tagObj.path){showUI(tagObj.path)
+					}
+				else {
+					app.u.throwGMessage("Warning! Invalid path specified in _rtag on admin.callbacks.showUI.onSuccess.");
+					app.u.dump("admin.callbacks.showUI.onSuccess tagObj (_rtag)");
+					app.u.dump(tagObj);
+					}
+				}
+			}, //showUI
 		showDomainConfig : {
 			onSuccess : function(){
 				app.ext.admin.u.domainConfig();
@@ -750,8 +778,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			},
 		
 		array2Template : function($tag,data)	{
-//				app.u.dump("BEGIN admin.renderFormats.array2Template");
-//				app.u.dump(data.value);
+//			app.u.dump("BEGIN admin.renderFormats.array2Template");
+//			app.u.dump(data.value);
 			var L = data.value.length;
 			for(var i = 0; i < L; i += 1)	{
 				$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
@@ -778,9 +806,119 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
-	
+//tmp while in dev so pushes can occur without UI being impacted.
+//opts is options (options is a reserved JS name)
+// -> opts.targetID is used within the function, but is not an accepted paramater (at this time) for being passed in.
+//    it's in opts to make debugging easier.
 
-			showUI : function(path,P)	{
+			showUI : function(path,opts){
+//make sure path passed in conforms to standard naming conventions.
+app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+
+				if(path)	{
+//mode is either app or legacy. mode is required and generated based on path.
+					var mode = undefined;
+					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
+					else if(path.substr(0,2) == "#:")	{mode = 'tabClick'} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
+					else if (path.substr(0,2) == "#!") {mode = 'app'}
+					else	{}
+					
+					if(mode)	{
+
+if(path.substr(0,2) == "#:")	{
+	path = "/biz/"+path.substring(2)+"/index.cgi";
+	}
+
+app.u.dump(" -> mode: "+mode);
+app.u.dump(" -> path: "+path);
+
+var reloadTab = 0; //used in conjunction with #: to determine if new or old contens should be displayed.
+var $target = undefined; //jquery object of content destination
+
+opts = opts || {}; //opts may b empty. treat as object.
+
+_ignoreHashChange = true; //see handleHashChange for details on what this does.
+document.location.hash = path; //update hash on URI.
+
+//app.u.dump(" -> opts: "); app.u.dump(opts);
+
+//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
+if(opts.tab){} // if tab is specified, always use it.
+else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
+else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined.
+else if(mode == 'legacy' || mode == 'tabClick'){
+	opts.tab = app.ext.admin.u.getTabFromPath(path);
+	} //#: denotes to open a tab, but not refresh the content.
+else	{
+	//hhmm. how did we get here?
+	}
+
+if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab in the header is in focus.
+else	{} //do nothing. perfectly normal to not change what tab is in focus.
+
+
+app.u.dump(" -> tab: "+opts.tab);
+
+//set the targetID and $target for the content. 
+// By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
+//this is JUST setting targetID. it isn't showing content or opening modals.
+if(opts.dialog){
+	opts.targetID = 'uiDialog';
+	$target = app.ext.admin.u.handleCompatModeDialog(opts); //jquery object is returned by this function.
+	}
+//load content into whatever tab is specified.
+else if(opts.tab)	{
+	opts.targetID = opts.tab+"Content";
+	$target = $(app.u.jqSelector('#',opts.targetID));
+	} 
+else if(app.ext.admin.vars.tab)	{
+	opts.targetID = app.ext.admin.vars.tab+"Content";
+	$target = $(app.u.jqSelector('#',opts.targetID));
+	} //load into currently open tab. common for apps.
+else	{
+	//not in an app. no tab specified. not in modal. odd. how did we get here? No $target will be set. error handling occurs in if($target) check below.
+	}
+
+
+if($target && $target.length)	{
+	if(opts.dialog)	{
+		app.ext.admin.u.handleShowSection(path,opts,$target); 
+		}
+	else	{
+		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
+		if(mode == 'app')	{
+			app.ext.admin.u.loadNativeApp(path,opts);
+			}
+		else if(mode == 'legacy')	{
+			app.ext.admin.u.handleShowSection(path,opts,$target);
+			}
+		else if(mode == 'tabClick')	{
+//determine whether new content is needed or not. typically, #: is only run from a tab so that when returning to  the tab, the last open content shows up.
+			if(opts.tab == app.ext.admin.vars.tab)	{reloadTab = 1; } //tab clicked from a page within that tab. show new content.
+			if ($target.children().length === 0)	{ reloadTab = 1; } //no content presently in target. load it.
+			if(reloadTab)	{app.ext.admin.u.handleShowSection(path,opts,$target);}
+			else	{} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
+			}
+		else	{}// should never get here. error case for mode not being set is already passed.
+		if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
+		}
+	}
+else	{
+	app.u.throwGMessage("Warning! target could not be found or does not exist on the DOM for admin.a.showUI.");
+	}
+						} //end 'if' for mode.
+					else	{
+						app.u.throwGMessage("Warning! unable to determine 'mode' in admin.a.showUI. path: "+path);	
+						}
+					
+					}
+				else	{
+					app.u.throwGMessage("Warning! path not set for admin.a.showUI");
+					}
+				return false;
+				},
+
+			oldShowUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				_ignoreHashChange = true; //see handleHashChange for details on what this does.
 				document.location.hash = path;
@@ -801,7 +939,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					P.title = P.title || "Details"
 					$target.parent().find('.ui-dialog-title').text(P.title);
 					$target.dialog('open');
-					app.ext.admin.u.handleShowSection(path,P,$target);
+//commented out by JT on 11/27. beleive this is redunant as it's executed in each condition of the next if/else
+//					app.ext.admin.u.handleShowSection(path,P,$target); 
 					}
 				else {
 					$('html, body').animate({scrollTop : 0},1000); //animation doesn't occur for modals.
@@ -894,13 +1033,39 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 				return false;
 				},
+/*
+A generic form handler. 
+$form is a jquery object of the form.
+set _cmd as a hidden input in the form.
+If you want to set any _tag attributes, set them as data-tag-key="value".
+ -> a good example of this would be data-_tag-callback and data-_tag-extension.
+Execute your own dispatch. This allows the function to be more versatile
+set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('mutable'); return false;"
+ -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
+*/
+				processForm : function($form)	{
+					var obj = $form.serializeJSON() || {};
+					if($form.length && obj._cmd)	{
+						var data = $form.data(); //obj of all data- attributes on the form tag. used to build tagObj. strips data- off of key.
+//use data-tag-... attributes on the form to build the _tag obj for the call.
+						obj._tag = {};
+						for(key in data)	{
+							if(i.substring(0,5) == "_tag-")	{obj._tag[i.slice(0,5)] = data[i];} //data- is stripped from key already. this slice pulls the tag- off.
+							else{}
+							}
+						app.model.addDispatchToQ(obj,data.q);
+						}
+					else	{
+						app.u.throwGMessage("Warning! $form was empty or _cmd not present within $form in admin.a.processForm");
+						}
+					}, //processForm
 				
 
 //this is a function that brian has in the UI on some buttons.
 //it's diferent than showUI so we can add extra functionality if needed.
 //the app itself should never use this function.
 			navigateTo : function(path,$t)	{
-				this.showUI(path,$t ? $t : {});
+				return this.showUI(path,$t ? $t : {});
 				},
 				
 			showDomainConfig : function(){
@@ -923,7 +1088,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					else{} //catch.
 					}
 				return r;
-				},
+				}, //getDataForDomain
+
 //host is www.zoovy.com.  domain is zoovy.com or m.zoovy.com.  This function wants a domain.
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
 			changeDomain : function(domain,partition,path){
@@ -949,7 +1115,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
 					}
 
-				},
+				}, //changeDomain
 
 
 
@@ -973,7 +1139,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					$editor.append("<div id='elementEditorMessaging'><\/div><div id='elementEditorContent' class='loadingBG'><\/div>").dialog({autoOpen:false,dialog:true, width: 500, height:500,modal:true});
 					}
 				$editor.dialog('open');
-				},
+				}, //loadElement
 
 
 			
@@ -988,7 +1154,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				app.model.dispatchThis();
 				$('#elementEditorContent').empty().append("<div class='loadingBG'><\/div>");
 				
-				},
+				}, //uiProdlistEditorUpdate
 
 /*
 to generate an instance of the finder, run: 
@@ -996,10 +1162,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 */
 			addFinderTo : function(targetID,findertype,path,attrib)	{
-			app.u.dump("BEGIN admin.u.addFinderTo");
-			app.u.dump(" -> findertype: "+findertype);
-			app.u.dump(" -> path: "+path);
-			app.u.dump(" -> attrib: "+attrib);
+				app.u.dump("BEGIN admin.u.addFinderTo");
+				app.u.dump(" -> findertype: "+findertype);
+				app.u.dump(" -> path: "+path);
+				app.u.dump(" -> attrib: "+attrib);
 				if(findertype == 'PRODUCT')	{
 					app.ext.store_product.calls.appProductGet.init(path,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
 					}
@@ -1025,7 +1191,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#domainChooserDialog').dialog('open').showLoading();
 				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
 				app.model.dispatchThis('immutable');
-				},	
+				},	 //showDomainChooser
 				
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
 			showFinderInModal : function(findertype,path,attrib)	{
@@ -1057,7 +1223,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#preloadAndLoginContents').showLoading();
 				app.calls.authentication.accountLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'});
 				app.model.dispatchThis('immutable');
-				},
+				}, //login
 
 			logout : function(){
 				$('body').showLoading();
@@ -1067,9 +1233,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
 				app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
 
-				}
+				} //logout
 
 			}, //action
+
 
 
 
@@ -1091,22 +1258,17 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('.username','#appView').text(app.vars.username);
 				var domain = this.getDomain();
 //				app.u.dump(" -> DOMAIN: ["+domain+"]");
+
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
-				
-				
-				// if (window.location.indexOf("#/",0)) {
-					// admin.html#/biz/xyz
-					// alert('hello');
-					// }
-				
+
 				if (!domain) {
 					//the selection of a domain name will load the page content. (but we'll still need to nav)
 					app.ext.admin.a.showDomainChooser(); 
 					}
 				else {
 					$('.domain','#appView').text(domain);
-// //no bueno to use this. if the app loads directly on a product page, that extension isn't done by the time this extension is done initing itself.
-					app.ext.admin.a.showUI(window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi'); //commented out for testing.
+// load whatever page is set on the hash onload. The product page being first needs some help.
+					app.ext.admin.a.showUI(window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi'); 
 					}
 				}, //showHeader
 
@@ -1128,11 +1290,88 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				}, //getDomain
 
 
+
+
+
+
+
+//used for bringing one of the top tabs into focus. does NOT impact content area.
+// !!! NOTE - when the old showUI goes away, so can this function. it's replaced with bringTabIntoFocus
 			handleTopTabs : function(tab){
 				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
 				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
 				},
-			
+
+
+
+			loadNativeApp : function(path,opts){
+				if(path == '#!mediaLibraryManageMode')	{
+					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
+					}
+				else if(path == '#!domainConfigPanel')	{
+					app.ext.admin.a.showDomainConfig();
+					}
+				else if(path == '#!orderPrint')	{
+					app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);
+					}
+				else if(path == '#!orderCreate')	{
+					app.ext.convertSessionToOrder.a.openCreateOrderForm();
+					}
+				else if(path == '#!tasks')	{
+					app.ext.admin_task.a.showTaskList();
+					}
+				else if(path == '#!domainConfigPanel')	{
+					app.ext.admin.a.showDomainConfig();
+					}
+				else	{
+					app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
+					}
+				},
+
+
+
+
+//used for bringing one of the top tabs into focus. does NOT impact content area.
+			bringTabIntoFocus : function(tab){
+				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
+				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
+				},
+
+//should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
+//this will replace handleShowSection
+			bringTabContentIntoFocus : function($target){
+				if($target.is('visible'))	{
+					//target is already visible. do nothing.
+					}
+				else	{
+					$('.tabContent').hide();
+					$target.show();
+					}
+				},
+
+
+//will create the dialog if it doesn't already exist.
+//will also open the dialog. does not handle content population.
+			handleCompatModeDialog : function(P){
+				var $target = false;
+				if(P.targetID)	{
+					$target = $(app.u.jqSelector('#',P.targetID));
+					if($target.length){} //element exists, do nothing to it.
+					else	{
+						$target = $("<div>").attr('id',P.targetID).appendTo('body');
+						$target.dialog({modal:true,width:'90%',height:500,autoOpen:false})
+						}
+					P.title = P.title || "Details"
+					$target.parent().find('.ui-dialog-title').text(P.title);
+					$target.dialog('open');
+					}
+				else	{
+					app.u.throwGMessage("Warning! no target ID passed into admin.u.handleCompatModeDialog.");
+					}
+				return $target;
+				},
+
+
 //executed from within showUI. probably never want to execute this function elsewhere.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
@@ -1161,7 +1400,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.model.fetchAdminResource(path,P);
 					}
 				},
-
+// !!! when the old showUI goes away, so can this function.
 			getId4UIContent : function(path){
 				return this.getTabFromPath(path)+"Content";
 				},

@@ -1,0 +1,61 @@
+<div id='taskListPageTemplate' class='page pageTask'>
+
+<h1>Task List</h1>
+
+<section class='ui-widget marginBottom'>
+	<div class='ui-state-default stdPadding ui-corner-top'>
+	<h3>Active Tasks</h3>
+	</div>
+	<div class='stdPadding ui-widget-content ui-corner-bottom'>
+	<form action='#'>
+	<input type='hidden' name='_cmd' value='adminTasksUpdate' />
+	<fieldset>
+	<table class='fullWidth gridTable'>
+	<thead>
+	<tr>
+		<th><input type='checkbox' onChange="$(this).closest('fieldset').find(':checkbox').attr('checked', this.checked);" /></th>
+		<th>Created</th>
+		<th>Task</th>
+		<th>Due Date</th>
+		<th>Priority</th>
+		<th>Quick Link</th>
+		<th>Assigned To</th>
+	</tr>
+	</thead>
+	<tbody id='taskListTbody' data-bind="var: task(@TASKS); format:processList; loadsTemplate:taskListRowTemplate;" class='loadingBG'>
+	</tbody>
+	</table>
+	</fieldset>
+	<fieldset class='taskListButtonRow'>
+	<button data-btn-action="addNewTask">Add New</button>
+	<span class='buttonSet'>
+		<input type='radio' name='action' value='assigntasks' title='Assign or reassign selected tasks'>Assign</button>
+		<input type='radio' name='action' value='prioritizetasks' title='Assign or reassign selected tasks'>Set Priority</button>
+		<input type='radio' name='action' value='prioritizetasks' title='Chagne the status of the selected tasks'>Change Status</button>
+		<input type='radio' name='action' value='scheduletasks' title='Add or change the due date of selected tasks'>Change Due Date</button>
+		<input type='radio' name='action' value='deletetasks' title='delete the selected tasks. There is no undo for this'>Delete</button>
+	</span>
+	</fieldset>
+	</form>
+	</div>
+</section>
+</div><!-- /pageTaskListTemplate -->
+
+
+<!--
+reminder: you can't have a template for a tr without a parent table (same for li and it's parent ul/ol) because when rendered, it causes some browser-specific randomness
+-->
+<table>
+<!-- tr will be assigned all key/value pairs in data- attributes (keys will be all lowercase) -->
+<tr id='taskListRowTemplate'>
+	<td><input type='checkbox' /></td><!-- bind a change event that adds/remves ui-selected class on tr -->
+	<td data-bind="var: task(CREATED_GMT); format:text;"></td>
+	<td data-bind="var: task(TITLE); format:text;"></td>
+	<td data-bind="var: task(DUE_GMT); format:text;"></td>
+	<td data-bind="var: task(PRIORITY); format:text;"></td>
+	<td onClick="app.u.dump($(this).parent().data()); alert($(this).parent().data('link'))" class='lookLikeLink'>Do it to it</td>
+	<td data-bind="var: task(LUSER); format:text;"></td>
+	
+</tr>
+
+</table>
