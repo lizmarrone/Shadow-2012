@@ -1,17 +1,31 @@
-body {background:#171b1e; color:#FFF; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+* {margin:0; padding:0;}
+body {background: url("images/site-bg-grad.png")repeat-x bottom left #171b1e; color:#FFF; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
 #appView {width:100%;}
 #header, #mainContentArea {width:900px; margin:0 auto;}
-#header {height:100px;}
+#header {height:100px;margin-top:15px;}
 #logo {width:395px; height:100px; float:left;}
 #header-right {width:505px;height:100px;float:left;}
 #header-decal {width:275px;height:61px;float:left;}
 #header-links {width:230px;height:61px;text-align:right;font-size:12px;float:left;color:#FFF;}
-#header a {color:#FFF; font-weight:normal; text-decoration:none;}
+#header a, #category-nav a, #footer a {color:#FFF; font-weight:normal; text-decoration:none;}
+#header a:hover, #footer a:hover {color:#2cabb8;} 
 #header-links span.cartspan {color:#14a2b0;}
 #header-links span.phonespan {font-weight:bold;margin-top:15px;display:inline-block;}
 #header-search-frame {clear:both;width:505px; height:40px; background:#000;border-radius:5px 5px 0 0;}
 #header-search {margin:auto;width:491px; height:29px; position:relative;}
-#header-search input#searchKwdField {background:#bcbcbc; border-radius:5px 5px 5px 5px;color:#656565;width:462px;height:27px;border:1px solid #656565; position:absolute;top:5px;}
+#header-search input#searchKwdField {background:#bcbcbc; border-radius:5px 5px 5px 5px;color:#656565;width:442px;height:27px;border:1px solid #656565; position:absolute;top:5px;padding:0 10px;}
 #header-search input#searchButton {background: url("images/search-button.png") no-repeat scroll right top transparent;cursor: pointer;width:67px; height:29px;position:absolute;top:5px; left:422px;z-index:2;}
 #category-nav {width:100%; background:url("images/cat-nav-bg.png") repeat-x top left transparent;clear:both; height:51px;border-top:2px solid #000;}
-#category-nav #tier1categories {width:900px; margin:0 auto;}
+#category-nav .inner {width:950px; margin:0 auto;}
+#category-nav ul {float:left;}
+#category-nav ul  li {float:left; list-style:none;}
+#category-nav a {display:block; padding:15px 10px 0;height:36px;}
+#category-nav a:hover {background:url("images/cat-nav-hover-bg.png") repeat-x top left transparent;}
+
+#footer {background:#171b1e; border-radius:0 0 5px 5px; height:190px;width:900px;margin:0 auto;}
+#footer h3 {font-size:15px;margin-bottom:15px;}
+#footer a {font-size:11px;}
+#footer-decal {width:900px; margin:0 auto;height:67px;}
+#footer #cslinks {width:340px; padding:0 20px;float:left;}
+#footer #sociallinks {width:240px; padding:0;float:left;}
+#footer #cslinks a, #footer #sociallinks a {padding:5px 20px 5px 0;width:90px; display:inline-block;}
