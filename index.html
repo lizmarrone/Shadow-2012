@@ -83,18 +83,21 @@
 		<div id="header">
 			<!--<img id="logo" src="" height="200" width="200" class="pointer" onClick="return showContent('category',{'navcat' : '.'}); />-->
 			<!--<h1>LOGO</h1>-->
-			<img id="logo" src="" alt="LOGO" width="198" height="53" />
+			<a href="index.html"><img id="logo" src="" alt="LOGO" width="198" height="53" /></a>
 			<h3>DECAL</h3>
 			<div id="mainNav">
 				<a href="#" onClick="return showContent('company',{'show' : 'about'});">About Us</a>
 				<a href="#" onClick="return showContent('company',{'show' : 'contact'});">Contact Us</a>
 				<a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">My Account</a>
-				<a href="#" onClick="return showContent('cart',{});">Newsletter</a></li>
-				<a href="#">My Cart</a>
+				<a href="#">Newsletter</a></li>
+				<a href="#" onClick="return showContent('cart',{});">My Cart</a>
 			</div>
 			<div id="search">
-				<img src="_header_search_bar.png" alt="Search Bar" />
-				<input id="txtSearch" type="text" value="Enter Search Keyword Here" width="415" />
+				<div id="submitBox"></div>
+				<form id="headerSearchFrm" name='headerSearchFrm' action='#' class='productSearchForm' method="get">
+					<input id="txtSearch" name="KEYWORDS" type="text" value="Enter Search Keyword Here" width="415" class="productSearchKeyword handleDefault" />
+					<img src="_header_search_bar.png" alt="Search Bar" />
+				</form>
 			</div>
 			<div id="contactInfo">
 				<a href="#">My Account</a>|<a href="#">Contact</a>|<a href="#">FAQ</a>|<a href="#"><b>Cart</b>: 5 items</a>
@@ -114,53 +117,49 @@
 			<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
 			<!-- ... your html ends -->
 			<!-- /VIEW CONTENT -->
-			<div id="footer">
-				<div id="custService">
-					<p>Customer Service</p>
-					<table>
-						<tr>
-							<td><a href="#">Contact Us</a></td><td><a href="#">FAQ</a></td><td><a href="#">View Cart</a></td>
-						</tr>
-						<tr>
-							<td><a href="#">Policies FAQ</a></td><td><a href="#">Order Status</a></td><td><a href="#">Checkout</a></td>
-						</tr>
-						<tr>
-							<td><a href="#">My Account</a></td><td><a href="#">Email Preferences</a></td><td><a href="#">Privacy Policy</a></td>
-						</tr>
-					</table>
-				</div>
-				<div id="socialNetworks">
-					<p>Social Networks</p>
-					<table>
-						<tr>
-							<td><a href="#">myFace</a></td><td><a href="#">linkedThis</a></td>
-						</tr>
-						<tr>
-							<td><a href="#">SpaceBook</a></td><td><a href="#">SpewTube</a></td>
-						</tr>
-						<tr>
-							<td><a href="#">Flitter</a></td><td></td>
-						</tr>					
-					</table>
-				</div>
-				<div id="subscribe">
-					<p>Subscribe & Save</p>
-					<table>
-						<tr>
-							<td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent venenatis aliquam</td>
-						</tr>
-						<tr>
-							<td><input id="txtSubscribe1" name="txtSubscribe1" type="text" /></td>
-						</tr>
-						<tr>
-							<td><input id="txtSubscribe2" name="txtSubscribe2" type="text" />
-							<input id="btnSubscribe" name="btnSubscribe" type="button" value="join now" /></td>
-						</tr>
-					</table>
-				</div>
-				<p id="copyright">Copyright &copy; blah blah blah</p>
-				<p id="poweredBy">Powered by Zoovy</p>
+		</div>
+		<div id="footer">
+			<div id="footHeaders">
+				<p id="custServiceHeader">Customer Service</p>
+				<p id="socialNetworksHeader">Social Networks</p>
+				<p id="subscribeHeader">Subscribe & Save</p>
 			</div>
+			<table id="custService">
+				<tr>
+					<td><a href="#">Contact Us</a></td><td><a href="#">FAQ</a></td><td><a href="#">View Cart</a></td>
+				</tr>
+				<tr>
+					<td><a href="#">Policies FAQ</a></td><td><a href="#">Order Status</a></td><td><a href="#">Checkout</a></td>
+				</tr>
+				<tr>
+					<td><a href="#">My Account</a></td><td><a href="#">Email Preferences</a></td><td><a href="#">Privacy Policy</a></td>
+				</tr>
+			</table>
+			<table id="socialNetworks">
+				<tr>
+					<td><a href="#">myFace</a></td><td><a href="#">linkedThis</a></td>
+				</tr>
+				<tr>
+					<td><a href="#">SpaceBook</a></td><td><a href="#">SpewTube</a></td>
+				</tr>
+				<tr>
+					<td><a href="#">Flitter</a></td><td></td>
+				</tr>					
+			</table>	
+			<table id="subscribe">
+				<tr>
+					<td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent venenatis aliquam</td>
+				</tr>
+				<tr>
+					<td><input id="txtSubscribe1" name="txtSubscribe1" type="text" /></td>
+				</tr>
+				<tr>
+					<td><input id="txtSubscribe2" name="txtSubscribe2" type="text" />
+					<input id="btnSubscribe" name="btnSubscribe" type="button" value="join now" /></td>
+				</tr>
+			</table>													
+			<p id="copyright">Copyright &copy; blah blah blah</p>
+			<p id="poweredBy">Powered by Zoovy</p>
 		</div>
 	</div>
 
@@ -1355,6 +1354,10 @@
 					$(this).val("Enter Search Keyword Here");
 				}
 			});			
+			$("div#search div#submitBox").click(function()
+			{
+				$("form#headerSearchFrm").submit();
+			});
 		});
 	</script>
 	</body>

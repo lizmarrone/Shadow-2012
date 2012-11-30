@@ -1,24 +1,25 @@
 *{border: 0px; outline: 0px; margin: 0px; padding: 0px;}
 body
 {
+	background-color: #000000;
 	/*background-color: #171b1e;*/
 }
 body
 {
 	/* Safari and Google Chrome */
-	background: -webkit-linear-gradient(top, #171b1e, #3b3f41);
+	background: -webkit-linear-gradient(top, #171b1e, #3b3f41) no-repeat;
 	
 	/* Firefox */
-	background: -moz-linear-gradient(top,  #171b1e, #3b3f41);
+	background: -moz-linear-gradient(top,  #171b1e, #3b3f41) no-repeat;
 	
 	/* Opera */
-	background: -o-linear-gradient(top, #171b1e, #3b3f41);
+	background: -o-linear-gradient(top, #171b1e, #3b3f41) no-repeat;
 	
 	/* Internet Explorer */
-	background: -ms-linear-gradient(top, #171b1e, #3b3f41);
+	background: -ms-linear-gradient(top, #171b1e, #3b3f41) no-repeat;
 	
 	/* W3C Standard */
-	background: gold linear-gradient(to bottom, #171b1e, #3b3f41);
+	background: #171b1e linear-gradient(to bottom, #171b1e, #3b3f41) no-repeat;
 }
 div#appPreView, div#appView
 {
@@ -32,8 +33,7 @@ div#header, div#contentBody
 
 div#header
 {
-	/*border: 1px solid white;
-	height: 150px;*/
+	height: 170px;
 	position: relative;
 }
 	/*div#header h1
@@ -129,12 +129,12 @@ div#header
 		height: 29px;
 		position: absolute;
 		right: 9px;
-		top: 61px;
+		top: 69px;
 		width: 492px;
 	}
 		div#header div#search img
 		{
-			cursor: pointer;
+			/*cursor: pointer;*/
 			position: absolute;
 		}
 		div#header div#search input
@@ -147,6 +147,17 @@ div#header
 			position: absolute;
 			top: 8px;
 			width: 415px;
+			z-index: 1;
+		}
+		div#header div#search div#submitBox
+		{
+			cursor: pointer;
+			height: 26px;
+			right: 0px;
+			position: absolute;
+			top: 0px;
+			width: 64px;
+			z-index: 2;
 		}
 div#contentBody
 {	
@@ -180,14 +191,15 @@ div#contentBody
 	}
 div#contentBody
 {
-	margin-bottom: 70px;
+	
 }
 div#footer
 {
 	background-color: #171b1e;
 	color: #FFFFFF;
 	font-family: Helvetica;
-	height: 180px;
+	height: 200px;
+	margin-bottom: 70px;
 	position: relative;
 	width: 900px;
 	
@@ -197,96 +209,126 @@ div#footer
 	div#footer > div
 	{
 		display: table-cell;
-		margin-top: 32px;
+		padding-bottom: 12px;
+		position: relative;
 	}
-		div#footer div#custService
+		div#footer div#footHeaders
 		{
-			padding-right: 75px;
+			background: url('_footer_nav_background.png') repeat-x;
+			display: block;
+			height: 55px;
+			padding-bottom: 0px;
+			position: relative;
+			width: 100%;
 		}
-			div#footer div#custService p, div#footer div#custService table
-			{
-				margin-left: 13px;
-			}
-			div#footer div#subscribe p, div#footer div#subscribe table
-			{
-				margin-right: 35px;
-			}
-			div#footer div#custService table tr td
-			{
-				padding-bottom: 10px;
-			}
-			div#footer div#custService table tr td:first-child, div#footer div#custService table tr td:first-child+td
-			{
-				padding-right: 45px;
-			}
-		div#footer div#socialNetworks
+		div#footer div#footHeaders p
 		{
-			padding-right: 140px;
+			display: inline;
+			position: relative;
+			top: 17px;
 		}
-			div#footer div#socialNetworks table tr td
+			div#footer div#footHeaders p#custServiceHeader
 			{
-				padding-bottom: 10px;
-			}		
-			div#footer div#socialNetworks table tr td:first-child
-			{
-				padding-right: 60px;	 
+				left: 13px;
 			}
-		div#footer div#subscribe
+			div#footer div#footHeaders p#socialNetworksHeader
+			{
+				left: 243px;
+			}
+			div#footer div#footHeaders p#subscribeHeader
+			{
+				left: 398px;
+			}
+
+	div#footer table
+	{
+		display: inline;
+		position: relative;
+	}	
+	div#footer table#custService
+	{
+		padding-right: 30px;
+		position: relative;
+	}
+		div#footer table#custService tr td
+		{
+			padding-bottom: 10px;
+			padding-right: 20px;
+		}		
+		div#footer table#custService tr td a
+		{
+			margin-left: 13px;
+		}
+
+	div#footer table#socialNetworks
+	{
+		padding-right: 70px;
+		position: relative;
+	}
+		div#footer table#socialNetworks tr td
+		{
+			padding-bottom: 10px;
+			width: 100px;
+		}		
+		div#footer table#socialNetworks tr td:first-child
 		{
 			
 		}
-			div#footer div#subscribe table
-			{
-				width: 230px;
-			}
-				div#footer div#subscribe table tr:first-child td
-				{
-					padding-bottom: 10px;
-				}
-				div#footer div#subscribe table tr:first-child+tr td
-				{
-					padding-bottom: 5px;
-				}
-				div#footer div#subscribe table tr td input#txtSubscribe1
-				{
-					height: 22px;
-					width: 186px;
-				}
-				div#footer div#subscribe table tr td input#txtSubscribe2
-				{
-					height: 22px;
-					width: 128px;
-				}	
-				div#footer div#subscribe table tr td input#btnSubscribe
-				{
-					background-color: #14a2b0;
-					color: #FFFFFF;
-					cursor: pointer;
-					height: 22px;
-					position: relative;
-					top: 1px;
-					width: 55px;
-				}
-		div#footer > div p
+	div#footer table#subscribe
+	{
+		position: relative;
+		top: 13px;
+	}
+		div#footer table#subscribe tr:first-child td
 		{
-			font-size: 14px;
-			font-weight: bold;
 			padding-bottom: 10px;
 		}
+		div#footer table#subscribe tr:first-child+tr td
+		{
+			padding-bottom: 5px;
+		}
+		div#footer table#subscribe tr td
+		{
+			width: 245px;
+		}
+		div#footer table#subscribe tr td input#txtSubscribe1
+		{
+			height: 22px;
+			width: 186px;
+		}
+		div#footer table#subscribe tr td input#txtSubscribe2
+		{
+			height: 22px;
+			width: 128px;
+		}	
+		div#footer table#subscribe tr td input#btnSubscribe
+		{
+			background-color: #14a2b0;
+			color: #FFFFFF;
+			cursor: pointer;
+			height: 22px;
+			position: relative;
+			top: 1px;
+			width: 55px;
+		}
+		div#footer > table p
+		{
 
-		div#footer > div table tr td
+		}
+
+		div#footer > table tr td
 		{
 			font-family: Helvetica;
 			font-size: 12px;
 		}
 		
-		div#footer > div table tr td a
+		div#footer > table tr td a
 		{
 			color: #FFFFFF;
 			text-decoration: none;
 		}
 		
-		div#footer > div table tr td a:hover
+		div#footer > table tr td a:hover
 		{
 			text-decoration: underline;
 		}		
@@ -306,3 +348,20 @@ div#footer
 		position: absolute;
 		right: 18px;
 	}
+	
+	
+.categoryList li
+{
+	color: #FFFFFF;
+	font-family: Helvetica;
+	padding-left: 46px;
+	padding-top: 20px;
+	/*margin-left: 28px;
+	margin-top: 15px;
+	width: 185px;*/
+}
+
+.productList li
+{
+	padding-left: 47px;
+}

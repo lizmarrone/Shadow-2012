@@ -113,7 +113,7 @@ var admin_prodEdit = function() {
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/product_editor.css','product_editor_styles']);
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/product_editor.html',theseTemplates);
-				window.savePanel = app.ext.admin.a.saveProductPanel; //for product editor.
+//				window.savePanel = app.ext.admin.a.saveProductPanel; //for product editor. odd. this function doesn't exist. commented out by JT on 2012-11-27
 				window.editProduct = app.ext.admin_prodEdit.a.showPanelsFor;
 				return r;
 				},
@@ -129,27 +129,27 @@ var admin_prodEdit = function() {
 				$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
 				$results = $(app.u.jqSelector('#',tagObj.targetID));
 				var $a; //recycled.
-				for(index in app.data[tagObj.datapointer]['%CATEGORIES'])	{
-					$a = $("<a \/>").attr('data-management-category',index).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(index || 'uncategorized'));
+//cats is an array of keys (management category names) used for sorting purposes.
+//regular sort won't work because Bob comes before andy because of case. The function normalizes the case for sorting purposes, but the array retains case sensitivity.
+				var cats = Object.keys(app.data[tagObj.datapointer]['%CATEGORIES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+//				app.u.dump(cats);
+				for(index in cats)	{
+					$a = $("<a \/>").attr('data-management-category',cats[index]).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized'));
 //In the app framework, it's not real practical to load several hundred product into memory at one time.
-//so if a management category has more than 100 items in it, the list is opened in the main product area in a multipage format.
-//					if(app.data[tagObj.datapointer]['%CATEGORIES'][index].length < 101)	{
-//						$a.click(function(){
-//							app.ext.admin_prodEdit.a.toggleManagementCat(this,$(this).data('management-category'));
-//							});
-//						}
-//					else	{
+//so the list is opened in the main product area in a multipage format.
 						$a.click(function(){
 							var $ul = $("<ul \/>").attr({'id':'manageCatProdlist','data-management-category':$(this).data('management-category')});
 							var $target = $('#productTabMainContent').empty().append($ul);
+//convert to array and clean up extra comma's, blanks, etc.
+//also, sort alphabetically.
+							var csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')]).sort(); 
 							app.ext.store_prodlist.u.buildProductList({
-								'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')],
+								'csv': csv,
 								'parentID':'manageCatProdlist',
 								'loadsTemplate' : 'productListTableListTemplate',
 								'items_per_page' : 100
 								},$ul);
 							});
-//						}
 					$a.wrap("<li>");
 					$results.append($a);
 					}
@@ -312,34 +312,32 @@ var admin_prodEdit = function() {
 
 		u : {
 
-
 			showProductEditor : function(path,P)	{
-//			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor");
+			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor ["+path+"]");
 //			app.u.dump(" -> P: "); app.u.dump(P);
 			
 			window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;  
 			//always rewrite savePanel. another 'tab' may change the function.
-			//kill any calls.
-			// NOTE - if the product editor gets a default fetchAdmin call, then this code won't be necessary.
-			//it's here to cancel any calls in progress so that if setup then products are clicked quickly, setup doesn't get loaded.
+			//kill any calls in progress so that if setup then product tabs are clicked quickly, setup doesn't get loaded.
 
 			if(!$.isEmptyObject(app.ext.admin.vars.uiRequest))	{
 				app.u.dump("request in progress. Aborting.");
 				app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
 				}
 
+//add product page template if not already set.
 			if(!$('#productEditorTemplate').length)	{
 				$(app.u.jqSelector('#',P.targetID)).empty().append(
 					app.renderFunctions.createTemplateInstance('productEditorTemplate')
 					);
-				
+//get and display the list of product management categories.				
 				app.ext.admin_prodEdit.calls.adminProductManagementCategoryList.init(
 					{'callback':'showMangementCats','extension':'admin_prodEdit','targetID':'manCats'},
 					'mutable');
 				app.model.dispatchThis('mutable');
-				
-				
-				
+
+
+//add click actions to the list of tags. Once clicked, a search result for that tag will get displayed in the main edit area.
 				$('.tagFilterList li','#prodLeftCol').each(function(){
 					$(this).addClass('lookLikeLink').click(function(){
 						app.ext.admin_prodEdit.u.prepContentArea4Results();
@@ -348,8 +346,8 @@ var admin_prodEdit = function() {
 						app.model.dispatchThis('mutable');
 						})
 					})
-				
-				
+
+//add click actions to the syndication list items. Once clicked, a search result for that tag will get displayed in the main edit area.
 				$('.mktFilterList li','#prodLeftCol').each(function(){
 					$(this).addClass('lookLikeLink').click(function(){
 						app.ext.admin_prodEdit.u.prepContentArea4Results();
@@ -362,19 +360,16 @@ var admin_prodEdit = function() {
 			else	{
 				//product editor is already on the dom. Right now, only one instance of the editor can be created at a time.
 				}
-
-			// why the hell did it do a fetchAdminResource call ?
-			path = path || "/biz/product/edit.cgi?VERB=WELCOME";
-			P.targetID = "productTabMainContent";
-			$(app.u.jqSelector('#',P.targetID)).empty().append(
-				"<div class='loadingBG'></div>"
-				);
-			app.model.fetchAdminResource(path,P);
 			
-			//$("#productTabMainContent").empty().append(
-			//	app.renderFunctions.createTemplateInstance('productEditorWelcome')
-			//	);
-
+			if(P.pid)	{app.ext.admin_prodEdit.a.showPanelsFor(P.pid)} //if a pid is specified, immediately show the editor for that pid.
+			else if(!path || path == '/biz/product/index.cgi' || path == '/biz/product/edit.cgi?VERB=WELCOME')	{
+				//do nothing. product page template has initial load content.
+				}
+			else	{
+				P.targetID = "productTabMainContent";
+				$(app.u.jqSelector('#',P.targetID)).empty().showLoading();
+				app.model.fetchAdminResource(path,P);
+				}
 			}, //showProductTab 
 
 
