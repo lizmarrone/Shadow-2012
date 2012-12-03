@@ -274,34 +274,35 @@ div#footer
 		{
 			
 		}
-	div#footer table#subscribe
+	div#footer form table#subscribe
 	{
+		font-size: 12px;
 		position: relative;
-		top: 13px;
+		top: 11px;
 	}
-		div#footer table#subscribe tr:first-child td
+		div#footer form table#subscribe tr:first-child td
 		{
 			padding-bottom: 10px;
 		}
-		div#footer table#subscribe tr:first-child+tr td
+		div#footer form table#subscribe tr:first-child+tr td
 		{
 			padding-bottom: 5px;
 		}
-		div#footer table#subscribe tr td
+		div#footer form table#subscribe tr td
 		{
 			width: 245px;
 		}
-		div#footer table#subscribe tr td input#txtSubscribe1
+		div#footer form table#subscribe tr td input#txtSubscribe1
 		{
 			height: 22px;
 			width: 186px;
 		}
-		div#footer table#subscribe tr td input#txtSubscribe2
+		div#footer form table#subscribe tr td input#txtSubscribe2
 		{
 			height: 22px;
 			width: 128px;
 		}	
-		div#footer table#subscribe tr td input#btnSubscribe
+		div#footer form table#subscribe tr td input#btnSubscribe
 		{
 			background-color: #14a2b0;
 			color: #FFFFFF;
@@ -349,7 +350,6 @@ div#footer
 		right: 18px;
 	}
 	
-	
 .categoryList li
 {
 	color: #FFFFFF;
@@ -365,3 +365,129 @@ div#footer
 {
 	padding-left: 47px;
 }
+
+#subscribeFrm
+{
+	display: inline;
+}
+
+div#tools
+{
+	background-color: #303030;
+	height: 970px;
+	margin: 0px auto;
+	overflow: hidden;	
+	position: relative;
+	width: 700px;
+}
+	div#tools > div
+	{
+		background-color: #000000;
+		color: #FFFFFF;
+		/*display: inline;*/
+		float: left;
+		font-family: Helvetica;
+		font-size: 12px;
+		height: 150px;
+		margin-left: 25px;
+		margin-top: 10px;
+		position: relative;
+		width: 200px;
+		
+		-moz-border-radius: 15px;
+		border-radius: 15px;
+		/*position: absolute;*/
+	}
+		div#tools > div p
+		{
+			clear: both;
+			margin-left: 10px;
+			margin-top: 5px;
+			padding-bottom: 2px;
+		}
+		div#tools div#uiComboBox select
+		{
+			background: url("jquery-ui-1.9.2.custom/css/custom-theme/images/ui-bg_highlight-soft_25_2a2b2d_1x100.png") repeat-x scroll 50% 50% #2A2B2D;	
+			border: 1px solid #000000;
+			color: #FFFFFF;
+			padding: 2px;
+			margin-left: 5px;
+			-moz-border-radius: 5px;
+			border-radius: 5px;			
+		}
+		div#tools div#uiButtonBar div#radio
+		{
+			margin-left: 5px;
+		}
+		div#tools div#uiButton button
+		{
+			margin: 0px 0px 5px 5px;
+			width: 100px;
+		}
+		div#tools div#uiTab div#tabs > div
+		{
+			/*height: 1px;
+			overflow: hidden;
+			width: 1px;*/
+		}
+		div#tools div#uiRadioButton input[type=radio]
+		{
+			margin-left: 10px;
+		}
+		
+		div#tools div#uiList select
+		{
+			margin-left: 10px;
+			width: 100px;
+			
+			-moz-border-radius: 5px;
+			border-radius: 5px;		
+		}
+		div#tools div#uiSlider div#slider
+		{
+			background: url("jquery-ui-1.9.2.custom/css/custom-theme/images/ui-bg_highlight-soft_25_2a2b2d_1x100.png") repeat-x scroll 50% 50% #2A2B2D; 
+			margin-left: 20px;
+			position: relative;
+			width: 160px;
+		}
+		
+			div#tools div#uiSlider div#slider a.ui-state-default
+			{
+				background-color: #4fabb6;
+			}
+		
+		div#tools div#uiScrollBar div#scroll
+		{
+			height: 100px;
+			overflow: auto;
+			width: 20px;
+		}
+		
+		div#tools div#uiCheckbox input[type=checkbox]
+		{
+			margin-left: 10px;
+		}
+		
+		div#tools div#uiTextArea textarea
+		{
+			border: 2px solid #000000;
+			margin-left: 10px;
+		}
+		
+		div#tools div#uiTextInput input[type=text]
+		{
+			margin-left: 10px;
+		}
+		
+		div#tools div#uiLinkButton a
+		{
+			margin-left: 10px;
+		}
+		
+		div#tools div#uiNumericStepper input#spinner
+		{
+			background: url("jquery-ui-1.9.2.custom/css/custom-theme/images/ui-bg_highlight-soft_25_2a2b2d_1x100.png") repeat-x scroll 50% 50% #2A2B2D;	
+			color: #FFFFFF;
+		}
+		.ui-progressbar {height: 10px; width: 290px;}
+		.ui-progressbar .ui-progressbar-value { /*background-image: url("jquery-ui-1.9.2.custom/css/custom-theme/images/pbar-ani.gif");*/ background-color: #2cabb8; height: 10px; width: 290px; margin-left: 10px;}
