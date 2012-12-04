@@ -98,6 +98,7 @@ div#header
 		}
 	div#header div#contactInfo
 	{
+		color: #FFFFFF;
 		position: absolute;
 		right: 0px;
 		top: 5px;
@@ -123,6 +124,16 @@ div#header
 			position: absolute;
 			right: 7px;
 			top: 25px;
+		}
+		div#header div#contactInfo b
+		{
+			padding-left: 8px;
+		}
+		div#header div#contactInfo b, div#header div#contactInfo span.cartItemCount
+		{
+			color: #FFFFFF;
+			font-size: 12px;		
+			font-family: Helvetica;
 		}
 	div#header div#search 
 	{
@@ -161,21 +172,6 @@ div#header
 		}
 div#contentBody
 {	
-	/* Safari and Google Chrome */
-	/*background: -webkit-linear-gradient(top, #171b1e, #3b3f41);
-	
-	/* Firefox */
-	/*background: -moz-linear-gradient(top,  #171b1e, #3b3f41);
-	
-	/* Opera */
-	/*background: -o-linear-gradient(top, #171b1e, #3b3f41);
-	
-	/* Internet Explorer */
-	/*background: -ms-linear-gradient(top, #171b1e, #3b3f41);
-	
-	/* W3C Standard */
-	/*background: gold linear-gradient(to bottom, #171b1e, #3b3f41);*/
-	
 	background-color: #171b1e;
 	color: #FFFFFF;
 	font-family: Helvetica;
@@ -489,5 +485,6 @@ div#tools
 			background: url("jquery-ui-1.9.2.custom/css/custom-theme/images/ui-bg_highlight-soft_25_2a2b2d_1x100.png") repeat-x scroll 50% 50% #2A2B2D;	
 			color: #FFFFFF;
 		}
+		.ui-dialog {background: -moz-linear-gradient(center top , #171B1E, #3B3F41) no-repeat scroll 0 0 transparent;};
 		.ui-progressbar {height: 10px; width: 290px;}
 		.ui-progressbar .ui-progressbar-value { /*background-image: url("jquery-ui-1.9.2.custom/css/custom-theme/images/pbar-ani.gif");*/ background-color: #2cabb8; height: 10px; width: 290px; margin-left: 10px;}

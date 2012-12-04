@@ -88,7 +88,7 @@
 		<div id="header">
 			<!--<img id="logo" src="" height="200" width="200" class="pointer" onClick="return showContent('category',{'navcat' : '.'}); />-->
 			<!--<h1>LOGO</h1>-->
-			<a href="index.html"><img id="logo" src="" alt="LOGO" width="198" height="53" /></a>
+			<a href="#" onClick="return showContent('company',{'show' : 'about'});"><img id="logo" src="" alt="LOGO" width="198" height="53" /></a>
 			<h3>DECAL</h3>
 			<div id="mainNav">
 				<a href="#" onClick="return showContent('company',{'show' : 'about'});">About Us</a>
@@ -105,7 +105,7 @@
 				</form>
 			</div>
 			<div id="contactInfo">
-				<a href="#">My Account</a>|<a href="#">Contact</a>|<a href="#">FAQ</a>|<a href="#"><b>Cart</b>: 5 items</a>
+				<a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">My Account</a>|<a href="#" onClick="return showContent('company',{'show' : 'contact'});">Contact</a>|<a href="#" onClick="return showContent('customer',{'show' : 'faq'});">FAQ</a>|<a href="#" onClick="return showContent('cart',{});">My Cart</a>|<b>Cart:</b> <span class="cartItemCount"></span>
 				<p>Questions? Call us at 888.888.8888</p>
 			</div>
 		</div>
@@ -118,174 +118,6 @@
 			**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
 			-->
 		<div id="contentBody">
-			<div id="tools">
-				<div id="uiComboBox">
-					<p>Combo Box</p>
-					<select name="menu">
-						<option value="0" selected>(please select:)</option>
-						<option value="1">one</option>
-						<option value="2">two</option>
-						<option value="3">three</option>
-						<option value="other">other, please specify:</option>
-					</select>
-				</div>
-				<div id="uiButtonBar">
-					<p>Button Bar</p>
-					<div id="radio">
-						<input type="radio" id="radio1" name="radio" /><label for="radio1">Choice 1</label>
-						<input type="radio" id="radio2" name="radio" checked="checked" /><label for="radio2">Choice 2</label>
-						<input type="radio" id="radio3" name="radio" /><label for="radio3">Choice 3</label>
-    </div>
-				</div>
-				<div id="uiDateChooser">
-					<p>Date Chooser</p>
-					<p><input type="text" id="datepicker" /></p>
-				</div>
-				<div id="uiNumericStepper">
-					<p>Numeric Stepper</p>
-					<p>
-						<label for="spinner">Select a value:</label>
-						<input id="spinner" name="value" />
-					</p>
-				</div>
-				<div id="uiButton">
-					<p>Button</p>
-					<button>A</button>
-					<button>B</button>
-					<button>C</button>
-				</div>
-				<div id="uiTab">
-					<p>Tab</p>
-					<div id="tabs">
-						<ul>
-							<li><a href="#tabs-1">Nunc tincidunt</a></li>
-							<li><a href="#tabs-2">Proin dolor</a></li>
-							<li><a href="#tabs-3">Aenean lacinia</a></li>
-						</ul>
-						<div id="tabs-1">
-						</div>
-						<div id="tabs-2">
-						</div>
-						<div id="tabs-3">
-						</div>
-					</div>					
-				</div>
-				<div id="uiSlider">
-					<p>Slider</p>
-					<div id="slider"></div>
-				</div>
-				<div id="uiRadioButton">
-					<p>Radio Button</p>
-					<input id="uiRad1" name="uiRad" type="radio" /> 
-					<input id="uiRad2" name="uiRad" type="radio" /> 
-					<input id="uiRad3" name="uiRad" type="radio" /> 
-					<input id="uiRad4" name="uiRad" type="radio" /> 								
-				</div>
-				<div id="uiScrollBar">
-					<p>Scroll Bar</p>					
-					<div id="scroll">				
-						<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-					</div>
-				</div>
-				<div id="uiDataGrid">
-					<p>Data Grid</p>
-				</div>
-				<div id="uiList">
-					<p>List</p>
-					<select id="multiSelect" multiple="multiple">
-					  <option value="volvo">A</option>
-					  <option value="saab">B</option>
-					  <option value="opel">C</option>
-					  <option value="audi">D</option>
-					</select>
-				</div>
-				<div id="uiCheckbox">
-					<p>Checkbox</p>
-					<input type="checkbox" />
-					<input type="checkbox" />
-					<input type="checkbox" />
-					<input type="checkbox" />															
-				</div>
-				<div id="uiPanelWindow">
-					<p>Panel & Window</p>
-				</div>
-				<div id="uiLinkButton">
-					<p>Link Button</p>
-					<a>Link</a>
-				</div>
-				<div id="uiTextArea">
-					<p>Text Area</p>
-					<textarea></textarea>
-				</div>
-				<div id="uiProgressBar">
-					<p>Progress Bar</p>
-					<div id="uiActiveProgressBar"></div>
-				</div>
-				<div id="uiTextInput">
-					<p>Text Input</p>
-					<input id="txtInput" type="text" />
-				</div>
-				<!--<div id="accordion">
-					<h3>Section 1</h3>
-					<div>
-						<p>
-						Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer
-						ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit
-						amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut
-						odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.
-						</p>
-					</div>
-					<h3>Section 2</h3>
-					<div>
-						<p>
-						Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet
-						purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor
-						velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In
-						suscipit faucibus urna.
-						</p>
-					</div>
-					<h3>Section 3</h3>
-					<div>
-						<p>
-						Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
-						Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
-						ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
-						lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
-						</p>
-						<ul>
-							<li>List item one</li>
-							<li>List item two</li>
-							<li>List item three</li>
-						</ul>
-					</div>
-					<h3>Section 4</h3>
-					<div>
-						<p>
-						Cras dictum. Pellentesque habitant morbi tristique senectus et netus
-						et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
-						faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
-						mauris vel est.
-						</p>
-						<p>
-						Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
-						Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-						inceptos himenaeos.
-						</p>
-					</div>
-				</div>
-				<div id="buttons">
-					<input id="rad1" name="rad1" type="radio" />
-					<input id="rad2" name="rad2" type="radio" />
-					<input id="rad3" name="rad3" type="radio" />
-					<button>A button element</button>
-					<button>A button element</button>
-					<button>A button element</button>
-				</div>
-				<p>Date: <input type="text" id="datepicker" /></p>
-				<div id="dialog" title="Basic dialog">
-    				<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
-				</div>-->
-			</div>
 			<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 			<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
 			<!-- ... your html ends -->
@@ -299,13 +131,13 @@
 			</div>
 			<table id="custService">
 				<tr>
-					<td><a href="#">Contact Us</a></td><td><a href="#">FAQ</a></td><td><a href="#">View Cart</a></td>
+					<td><a href="#" onClick="return showContent('company',{'show' : 'contact'});">Contact Us</a></td><td><a href="#" onClick="return showContent('customer',{'show' : 'faq'});">FAQ</a></td><td><a href="#" onClick="return showContent('cart',{});">View Cart</a></td>
 				</tr>
 				<tr>
-					<td><a href="#">Policies FAQ</a></td><td><a href="#">Order Status</a></td><td><a href="#">Checkout</a></td>
+					<td><a href="#" onClick="showContent('company',{'show':'return'});">Return Policy</a></td><td><a href="#" onClick="showContent('customer',{'show':'orders'});">Order Status</a></td><td><a href="#" onclick="showContent('checkout',{});">Checkout</a></td>
 				</tr>
 				<tr>
-					<td><a href="#">My Account</a></td><td><a href="#">Email Preferences</a></td><td><a href="#">Privacy Policy</a></td>
+					<td><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">My Account</a></td><td><a href="#">Email Preferences</a></td><td><a href="#" onClick="return showContent('company',{'show' : 'privacy'});">Privacy Policy</a></td>
 				</tr>
 			</table>
 			<table id="socialNetworks">
@@ -333,7 +165,7 @@
 					</tr>
 				</table>	
 			</form>												
-			<p id="copyright">Copyright &copy; blah blah blah</p>
+			<p id="copyright">Copyright &copy; 2012</p>
 			<p id="poweredBy">Powered by Zoovy</p>
 		</div>
 	</div>
