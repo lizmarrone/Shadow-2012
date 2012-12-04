@@ -2,7 +2,6 @@
 body
 {
 	background-color: #000000;
-	/*background-color: #171b1e;*/
 }
 body
 {
@@ -36,20 +35,6 @@ div#header
 	height: 170px;
 	position: relative;
 }
-	/*div#header h1
-	{
-		margin: 0px;
-		padding: 0px;
-		
-		color: #FFFFFF;
-		display: inline;
-		font-family: Arial;
-		font-size: 71.45px;
-		font-weight: lighter;
-		margin-left: 6px;
-		margin-top: 15px;
-	}*/
-	
 	div#header img#logo
 	{
 		border: 1px solid #FFFFFF;
@@ -66,23 +51,16 @@ div#header
 		color: #45494b;
 		font-family: Helvetica;
 		font-size: 48px;
-		/*font-weight: lighter;*/
 		left: 410px;
 		position: absolute;
 		top: 11px;
 	}
 	div#header div#mainNav
 	{
-		/*padding: 0;
-		margin: 0;*/
 		background: url('_header_nav_background.png') repeat-x;
 		height: 53px;
 		margin-top: 45px;
 	}
-		div#header div#mainNav a:not(:first-of-type) 
-		{
-			/*margin-left: 35px;*/
-		}
 		div#header div#mainNav a
 		{
 			color: #FFFFFF;
@@ -125,10 +103,6 @@ div#header
 			right: 7px;
 			top: 25px;
 		}
-		div#header div#contactInfo b
-		{
-			padding-left: 8px;
-		}
 		div#header div#contactInfo b, div#header div#contactInfo span.cartItemCount
 		{
 			color: #FFFFFF;
@@ -145,7 +119,6 @@ div#header
 	}
 		div#header div#search img
 		{
-			/*cursor: pointer;*/
 			position: absolute;
 		}
 		div#header div#search input
@@ -175,14 +148,11 @@ div#contentBody
 	background-color: #171b1e;
 	color: #FFFFFF;
 	font-family: Helvetica;
-	/*height: 100%;*/
-	/*padding-bottom: 70px;*/
 	position: relative;
 	width: 900px;
 }
 	div#contentBody div#mainContentArea
 	{
-		/*background-color: #171b1e;*/
 		position: relative;
 	}
 div#contentBody
@@ -380,7 +350,6 @@ div#tools
 	{
 		background-color: #000000;
 		color: #FFFFFF;
-		/*display: inline;*/
 		float: left;
 		font-family: Helvetica;
 		font-size: 12px;
@@ -392,7 +361,6 @@ div#tools
 		
 		-moz-border-radius: 15px;
 		border-radius: 15px;
-		/*position: absolute;*/
 	}
 		div#tools > div p
 		{
@@ -419,12 +387,6 @@ div#tools
 		{
 			margin: 0px 0px 5px 5px;
 			width: 100px;
-		}
-		div#tools div#uiTab div#tabs > div
-		{
-			/*height: 1px;
-			overflow: hidden;
-			width: 1px;*/
 		}
 		div#tools div#uiRadioButton input[type=radio]
 		{
@@ -485,6 +447,22 @@ div#tools
 			background: url("jquery-ui-1.9.2.custom/css/custom-theme/images/ui-bg_highlight-soft_25_2a2b2d_1x100.png") repeat-x scroll 50% 50% #2A2B2D;	
 			color: #FFFFFF;
 		}
-		.ui-dialog {background: -moz-linear-gradient(center top , #171B1E, #3B3F41) no-repeat scroll 0 0 transparent;};
+		.ui-dialog 
+		{
+			/* Safari and Google Chrome */
+			background: -webkit-linear-gradient(top, #171b1e, #3b3f41) no-repeat;
+			
+			/* Firefox */
+			background: -moz-linear-gradient(top,  #171b1e, #3b3f41) no-repeat;
+			
+			/* Opera */
+			background: -o-linear-gradient(top, #171b1e, #3b3f41) no-repeat;
+			
+			/* Internet Explorer */
+			background: -ms-linear-gradient(top, #171b1e, #3b3f41) no-repeat;
+			
+			/* W3C Standard */
+			background: #171b1e linear-gradient(to bottom, #171b1e, #3b3f41) no-repeat;
+		};
 		.ui-progressbar {height: 10px; width: 290px;}
-		.ui-progressbar .ui-progressbar-value { /*background-image: url("jquery-ui-1.9.2.custom/css/custom-theme/images/pbar-ani.gif");*/ background-color: #2cabb8; height: 10px; width: 290px; margin-left: 10px;}
+		.ui-progressbar .ui-progressbar-value {background-color: #2cabb8; height: 10px; width: 290px; margin-left: 10px;}
