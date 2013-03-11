@@ -68,7 +68,7 @@ formerly showCart
 				},
 			dispatch : function(tagObj)	{
 //				app.u.dump('BEGIN app.ext.store_cart.calls.cartDetail.dispatch');
-				app.model.addDispatchToQ({"_cmd":"cartDetail","_zjsid":app.sessionId,"_tag": tagObj});
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": tagObj});
 				}
 			},
 
@@ -83,7 +83,7 @@ formerly showCart
 				},
 			dispatch : function(tagObj,Q)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"cartDetail","_zjsid":app.sessionId,"_tag": tagObj},Q);
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": tagObj},Q);
 				}
 			},//getCartContents
 
@@ -105,7 +105,7 @@ formerly showCart
 				},
 			dispatch : function(stid,qty,tagObj)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_zjsid":app.sessionId,"_tag": tagObj},'immutable');
+				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
 				app.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
 				}
 			 },
@@ -249,21 +249,27 @@ formerly showCart
 		renderFormats : {
 			
 			cartItemQty : function($tag,data)	{
-//				app.u.dump("BEGIN store_cart.renderFormats.cartItemQty");
-//				app.u.dump(data);
-				var stid = $tag.closest('[data-stid]').attr('data-stid'); //get the stid off the parent container.
-//				app.u.dump(stid);
-				$tag.val(data.value).attr('data-stid',stid);
+				$tag.val(data.value.qty);
+//for coupons and assemblies, no input desired, but qty display is needed. so the qty is inserted where the input was.
+				if((data.value.stid && data.value.stid[0] == '%') || data.value.asm_master)	{
+					$tag.attr('readonly','readonly').css('border-width','0')
+					} 
+				else	{
+					$tag.attr('data-stid',data.value.stid);
+					}
 				},
 				
 				
 			removeItemBtn : function($tag,data)	{
 //nuke remove button for coupons.
-				if(data.value[0] == '%')	{$tag.remove()}
+				if(data.value.stid[0] == '%')	{$tag.remove()}
+				else if(data.value.asm_master)	{$tag.remove()}
 				else	{
-$tag.attr({'data-stid':data.value}).val(0); //val is used for the updateCartQty
+$tag.attr({'data-stid':data.value.stid}).val(0); //val is used for the updateCartQty
+$tag.button({icons: {primary: "ui-icon-closethick"},text: false});
 //the click event handles all the requests needed, including updating the totals panel and removing the stid from the dom.
-$tag.click(function(){
+$tag.one('click',function(event){
+	event.preventDefault();
 	app.ext.store_cart.u.updateCartQty($tag);
 	app.model.dispatchThis('immutable');
 	});
@@ -298,15 +304,15 @@ $tag.click(function(){
 				var o = '';
 //				app.u.dump('BEGIN app.renderFormats.shipInfo. (formats shipping for minicart)');
 //				app.u.dump(data);
-				var L = app.data.cartShippingMethods['@methods'].length;
+				var L = app.data.cartDetail['@SHIPMETHODS'].length;
 				for(var i = 0; i < L; i += 1)	{
 //					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
-					if(app.data.cartShippingMethods['@methods'][i].id == data.value)	{
-						var pretty = app.u.isSet(app.data.cartShippingMethods['@methods'][i]['pretty']) ? app.data.cartShippingMethods['@methods'][i]['pretty'] : app.data.cartShippingMethods['@methods'][i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
+					if(app.data.cartDetail['@SHIPMETHODS'][i].id == data.value)	{
+						var pretty = app.u.isSet(app.data.cartDetail['@SHIPMETHODS'][i]['pretty']) ? app.data.cartDetail['@SHIPMETHODS'][i]['pretty'] : app.data.cartDetail['@SHIPMETHODS'][i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
 						o = "<span class='orderShipMethod'>"+pretty+": <\/span>";
 //only show amount if not blank.
-						if(app.data.cartShippingMethods['@methods'][i].amount)	{
-							o += "<span class='orderShipAmount'>"+app.u.formatMoney(app.data.cartShippingMethods['@methods'][i].amount,' $',2,false)+"<\/span>";
+						if(app.data.cartDetail['@SHIPMETHODS'][i].amount)	{
+							o += "<span class='orderShipAmount'>"+app.u.formatMoney(app.data.cartDetail['@SHIPMETHODS'][i].amount,' $',2,false)+"<\/span>";
 							}
 						break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 						}
@@ -366,27 +372,30 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
  can't think of a reason not to use the default parentID, but just in case, it can be set.
 */
 			showCartInModal : function(P)	{
-//				app.u.dump("BEGIN store_cart.u.showCartInModal");
+//				app.u.dump("BEGIN store_cart.u.showCartInModal"); app.u.dump(P);
 				if(typeof P == 'object' && (P.templateID || P.showLoading === true)){
 					var $modal = $('#modalCart');
 //the modal opens as quick as possible so users know something is happening.
 //open if it's been opened before so old data is not displayed. placeholder content (including a loading graphic, if set) will be populated pretty quick.
 //the cart messaging is OUTSIDE the template. That way if the template is re-rendered, existing messaging is not lost.
-					if($modal.length == 0)	{
-						$modal = $("<div><div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div><\/div>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
-						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
-						}
-					else	{
+					if($modal.length)	{
 						$('#modalCartContents',$modal).empty(); //empty to remove any previous content.
 						$('.appMessaging',$modal).empty(); //errors are cleared because if the modal is closed before the default error animation occurs, errors become persistent.
 						$modal.dialog('open');
 						}
+					else	{
+						$modal = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+						$modal.append("<div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div>");
+						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
+						}
+
 					if(P.showLoading === true)	{
 						$('#modalCartContents',$modal).append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
 						}
 					else	{
-						$modal.append(app.renderFunctions.transmogrify('modalCartContents',P.templateID,app.data['cartDetail']));
+						$('#modalCartContents',$modal).append(app.renderFunctions.transmogrify({},P.templateID,app.data['cartDetail']));
 						}
+
 					}
 				else	{
 					app.u.throwGMessage("ERROR! no templateID passed into showCartInModal. P follows: ");
@@ -472,6 +481,25 @@ Parameters expected are:
 					}
 				return r;
 				},
+			
+			
+			getSkuByUUID : function(uuid){
+				var r; //what is returned. either false or a uuid.
+				if(app.data.cartDetail && app.data.cartDetail['@ITEMS'])	{
+					var L = app.data.cartDetail['@ITEMS'].length;
+					for(var i = 0; i < L; i += 1)	{
+						if(app.data.cartDetail['@ITEMS'].uuid == uuid)	{
+							r = app.data.cartDetail['@ITEMS'].stid || app.data.cartDetail['@ITEMS'].sku;
+							break; //once we have a match, no need to continue.
+							}
+						}
+					}
+				else	{
+					r = false;
+					}
+				return r;
+				},
+			
 /*
 executing when quantities are adjusted for a given cart item.
 call is made to update quantities.
@@ -531,7 +559,7 @@ so if an accessory showed up on four items in the cart, it'd be higher in the li
 				M = app.data.cartDetail['@ITEMS'].length;
 //				app.u.dump(" -> items in cart = "+M);
 				for(j = 0; j < M; j += 1)	{
-					if(proda = app.data.cartDetail['@ITEMS'][j]['full_product']['zoovy:accessory_products'])	{
+					if(proda = app.data.cartDetail['@ITEMS'][j]['%attribs']['zoovy:accessory_products'])	{
 //						app.u.dump(" -> item has accessories: "+proda);
 						prodArray = proda.split(',');
 						L = prodArray.length
